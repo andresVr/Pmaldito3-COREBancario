@@ -13,6 +13,7 @@ import com.espe.distribuidas.model.Cuenta;
 import com.espe.distribuidas.model.Movimiento;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -23,7 +24,7 @@ import javax.ejb.Stateless;
  */
 @LocalBean
 @Stateless
-public class CuentaServicio implements CuentaServicioRemote{
+public class CuentaServicio implements CuentaServicioRemote {
 
     @EJB
     CuentaDAO cuentaDAO;
@@ -92,5 +93,30 @@ public class CuentaServicio implements CuentaServicioRemote{
         }
 
     }
+    //e-banking
 
+    public Boolean relacionClienteCuenta(String Cedula, String cuenta) {
+        Cuenta busqueda = new Cuenta();
+        busqueda.setNumeroCuenta(cuenta);
+        Cuenta cuentatmp = this.cuentaDAO.findById(busqueda.getNumeroCuenta(), true);
+        return cuentatmp.getClienteCuenta().getCedula().equals(Cedula);
+    }
+
+    public BigDecimal saldoCuenta(String numeroCuenta) {
+        Cuenta tmp = new Cuenta();
+        tmp.setNumeroCuenta(numeroCuenta);
+        return this.cuentaDAO.find(tmp).get(0).getSaldo();
+
+    }
+
+    public List<Cuenta> obtenerConsolidado(String codigoCliente) {
+        Cliente clientetmp = new Cliente();
+        clientetmp.setCedula(codigoCliente);
+        Cuenta cuentatmp = new Cuenta();
+        cuentatmp.setCodigoCliente(clientetmp.getCedula());
+        return this.cuentaDAO.find(cuentatmp);
+    }
+    public Cuenta obtenerCuentaId(String idCuenta){
+        return this.cuentaDAO.findById(idCuenta, true);
+    }
 }

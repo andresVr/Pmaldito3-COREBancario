@@ -42,5 +42,6 @@ public class ClienteServicio implements ClienteServicioRemote{
         return clienteDAO.findAll();
     
     }
-
+        
+        
 }
